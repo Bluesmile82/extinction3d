@@ -179,8 +179,10 @@ function init() {
 
   // world
 
-  var geometry = new THREE.BoxBufferGeometry(1, 1, 1);
-  geometry.translate(0, 0.5, 0);
+  const geometry = new THREE.BoxBufferGeometry(1, 1, 1);
+  const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+
+  geometry.translate(0, 0, 0);
   const createMaterial = (color) =>
     new THREE.MeshPhongMaterial({
       color,
@@ -193,14 +195,13 @@ function init() {
         ANIMALIA: 0xffaaaa,
         PLANTAE: 0xaaffcc,
       };
-      const material = () => {
-        if (d.redlistCategory === 'Extinct') {
-          return createMaterial(0xffffff);
-        }
-        return createMaterial(kingdomColors[d.kingdomName] || 0xffffff);
-      };
 
-      var mesh = new THREE.Mesh(geometry, material());
+      const material = () => createMaterial(kingdomColors[d.kingdomName] || 0xffffff);
+
+      var mesh = new THREE.Mesh(
+        d.redlistCategory === 'Extinct' ? geometry : sphereGeometry,
+        material()
+      );
       mesh.position.z = (START_YEAR - d.year) * 10;
       mesh.position.y = Math.random() * 200;
       mesh.position.x = Math.random() * 250 - 100;

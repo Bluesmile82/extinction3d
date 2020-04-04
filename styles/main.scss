@@ -80,6 +80,10 @@ body {
       height: 10px;
       background-color: white;
 
+      &.round {
+        border-radius: 50%;
+      }
+
       &.animalia {
         background-color: #ffaaaa,
       }
