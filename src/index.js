@@ -41,8 +41,8 @@ function init() {
   intro.classList.add("start")
   outro.classList.add("start")
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x222);
-  scene.fog = new THREE.FogExp2(0x222, 0.0018);
+  scene.background = new THREE.Color(0x08151E);
+  scene.fog = new THREE.FogExp2(0x08151E, 0.0018);
 
   raycaster = new THREE.Raycaster();
 
@@ -178,7 +178,7 @@ function init() {
     if (INTERSECTED) {
       console.log(data[INTERSECTED.uuid]);
       window.open(
-        `https://es.wikipedia.org/wiki/${data[INTERSECTED.uuid].name}`,
+        `https://en.wikipedia.org/wiki/${data[INTERSECTED.uuid].name}`,
         '_blank'
       );
     }
@@ -206,8 +206,8 @@ function init() {
     .filter((d) => d.year)
     .forEach((d, i) => {
       const kingdomColors = {
-        ANIMALIA: 0xffaaaa,
-        PLANTAE: 0xaaffcc,
+        ANIMALIA: 0x552222,
+        PLANTAE: 0x73956f,
       };
 
       const material = () => createMaterial(kingdomColors[d.kingdomName] || 0xffffff);
@@ -244,7 +244,7 @@ function init() {
   light.position.set(-1, -1, -1);
   scene.add(light);
 
-  var light = new THREE.AmbientLight(0x222222);
+  var light = new THREE.AmbientLight(0x08151e);
   scene.add(light);
 
   window.addEventListener('resize', onWindowResize, false);
