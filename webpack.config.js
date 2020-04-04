@@ -39,10 +39,15 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin()
+    new HtmlWebpackPlugin({
+
+      title: 'Extinction',
+      template: 'index.html'
+    }
+    ),
   ],
   resolve: {
     extensions: ['.js', '.jsx', '.scss'],
   },
-  mode: 'production'
+  mode: 'production',
 };
