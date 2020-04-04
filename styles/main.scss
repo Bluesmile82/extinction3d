@@ -1,12 +1,14 @@
 $font-family-1: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 html {
   height: 100%;
+  overflow: hidden;
+  background-color: #000;
 }
 
 body {
-  background-color: #222;
   font-family: $font-family-1;
   height: 100%;
+  overflow: hidden;
 }
 
 #container {
@@ -28,6 +30,7 @@ body {
 }
 
 #intro {
+  display: none;
   position: absolute;
   width: 100%;
   height: 100%;
@@ -63,6 +66,7 @@ body {
 }
 
 #outro {
+  display: none;
   position: absolute;
   width: 100%;
   height: 100%;
@@ -158,6 +162,10 @@ body {
   font-size: 50px;
   font-family: $font-family-1;
   opacity: 0;
+}
+
+.start {
+  display: block;
 }
 
 .in {

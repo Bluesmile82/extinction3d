@@ -15,6 +15,9 @@ let yDown = null;
 let introVisible = true;
 let outroVisible = false;
 
+const intro = document.getElementById('intro');
+const outro = document.getElementById('outro');
+
 init();
 animate();
 
@@ -32,6 +35,8 @@ function onDocumentMouseMove(event) {
 }
 
 function init() {
+  intro.classList.add("start")
+  outro.classList.add("start")
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x222);
   scene.fog = new THREE.FogExp2(0x222, 0.0018);
@@ -83,20 +88,16 @@ function init() {
       console.log(nextyear, END_YEAR);
 
       if (introVisible) {
-        const intro = document.getElementById('intro');
         intro.classList.add('out');
         introVisible = false;
       }
       if (!introVisible && nextyear <= START_YEAR) {
-        const intro = document.getElementById('intro');
         intro.classList.remove('out');
         intro.classList.add('in');
         introVisible = true;
       }
 
       if (!outroVisible && nextyear >= END_YEAR - 10) {
-        const outro = document.getElementById('outro');
-        console.log('out now')
         clearTimeout(yearTimeout);
         yearUI.classList.add('out');
         outro.classList.remove('out');
