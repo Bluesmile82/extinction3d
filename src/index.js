@@ -174,11 +174,22 @@ function init() {
     yDown = null;
   }
 
+  const handleClick = () => {
+    if (INTERSECTED) {
+      console.log(data[INTERSECTED.uuid]);
+      window.open(
+        `https://es.wikipedia.org/wiki/${data[INTERSECTED.uuid].name}`,
+        '_blank'
+      );
+    }
+  }
+
   document.addEventListener('wheel', onMouseWheel, false);
   document.addEventListener('DOMMouseScroll', onMouseWheel, false);
   document.addEventListener('onmousewheel', onMouseWheel, false);
   document.addEventListener('touchstart', handleTouchStart, false);
   document.addEventListener('touchmove', handleTouchMove, false);
+  document.addEventListener('click', handleClick, false);
 
   // world
 
@@ -258,11 +269,24 @@ function showTooltip(data) {
   tooltip.classList.add('visible');
   tooltip.style.left = `${mousePosition.x}px`;
   tooltip.style.top = `${mousePosition.y}px`;
-  tooltip.innerHTML = `<div>${data.name}</div>`;
+  tooltip.parentElement.style.cursor = 'pointer';
+
+  tooltip.innerHTML = `
+    <div class="tooltip-item">
+      <div class="tooltip-name">
+      ${data.name}
+      </div>
+      <div class="kingdom-name">
+        ${data.kingdomName} - ${data.speciesClassName}
+      </div>
+      <div class="tooltip-message">Click to open wikipedia page</div>
+    </div>
+  `;
 }
 
 function clearTooltip() {
   tooltip.classList.remove('visible');
+  tooltip.parentElement.style.cursor = 'auto';
 }
 
 function render() {
