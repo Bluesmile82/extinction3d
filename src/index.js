@@ -66,8 +66,6 @@ function init() {
         (displayedYear !== roundedYear && roundedYear % 100 === 0) ||
         (roundedYear > 1890 && roundedYear % 10 === 0)
       ) {
-        console.log('sss', yearUI.classList);
-
         clearTimeout(yearTimeout);
         yearUI.classList.remove('in');
         yearUI.classList.remove('out');
@@ -166,7 +164,6 @@ function animate() {
 }
 
 function showTooltip(data) {
-  console.log('d', data, mousePosition);
   tooltip.classList.add('visible');
   tooltip.style.left = `${mousePosition.x}px`;
   tooltip.style.top = `${mousePosition.y}px`;
