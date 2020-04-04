@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import Hammer from 'hammerjs';
 import extinctionJson from './extinction.json';
 import '../styles/main.scss';
 
@@ -9,9 +10,17 @@ let mouse = new THREE.Vector2(),
 let mousePosition = { x: 0, y: 0 };
 const START_YEAR = 1450;
 const END_YEAR = 2020;
+let xDown = null;
+let yDown = null;
 
 init();
 animate();
+
+
+function handleTouchStart(evt) {
+    xDown = evt.touches[0].clientX;
+    yDown = evt.touches[0].clientY;
+};
 
 function onDocumentMouseMove(event) {
   event.preventDefault();
@@ -31,7 +40,16 @@ function init() {
 
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
+  const threeContainer = document.getElementById('three');
   document.getElementById('three').appendChild(renderer.domElement);
+
+  const hammertime = new Hammer(document.body);
+  hammertime.get('pinch').set({ enable: true });
+  hammertime.on('pinch', function (ev) {
+    console.log('event', ev);
+  });
+
+  document.getElementById('three');
 
   const yearUI = document.createElement('div');
   yearUI.classList.add('year');
@@ -40,7 +58,6 @@ function init() {
   tooltip = document.createElement('div');
   tooltip.classList.add('tooltip');
   document.getElementById('tooltip-container').appendChild(tooltip);
-
   document.addEventListener('mousemove', onDocumentMouseMove, false);
   camera = new THREE.PerspectiveCamera(
     55,
@@ -53,10 +70,11 @@ function init() {
 
   // controls
 
-  function onMouseWheel(e) {
+  function onMouseWheel(e, swipeDisplacement) {
+    const displacement = swipeDisplacement ? - swipeDisplacement * 10 : e.wheelDeltaY;
     const year = parseInt(camera.position.z / -10 + START_YEAR, 10);
     const nextyear = parseInt(
-      ((camera.position.z + e.wheelDeltaY) / -10) + START_YEAR,
+      (camera.position.z + displacement) / -10 + START_YEAR,
       10
     );
     if (nextyear > START_YEAR - 10 && nextyear < END_YEAR) {
@@ -81,14 +99,45 @@ function init() {
       camera.position.set(
         camera.position.x,
         camera.position.y,
-        camera.position.z + e.wheelDeltaY
+        camera.position.z + displacement
       );
     }
+  }
+
+  function handleTouchMove(evt) {
+    if (!xDown || !yDown) {
+      return;
+    }
+    var xUp = evt.touches[0].clientX;
+    var yUp = evt.touches[0].clientY;
+    var xDiff = xDown - xUp;
+    var yDiff = yDown - yUp;
+
+    if (Math.abs(xDiff) > Math.abs(yDiff)) {
+      /*most significant*/
+      if (xDiff > 0) {
+        /* left swipe */
+      } else {
+        /* right swipe */
+      }
+    } else {
+      onMouseWheel(evt, yDiff);
+      if (yDiff > 0) {
+        /* up swipe */
+      } else {
+        /* down swipe */
+      }
+    }
+    /* reset values */
+    xDown = null;
+    yDown = null;
   }
 
   document.addEventListener('wheel', onMouseWheel, false);
   document.addEventListener('DOMMouseScroll', onMouseWheel, false);
   document.addEventListener('onmousewheel', onMouseWheel, false);
+  document.addEventListener('touchstart', handleTouchStart, false);
+  document.addEventListener('touchmove', handleTouchMove, false);
 
   // world
 
