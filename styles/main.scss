@@ -80,6 +80,7 @@ body {
   text-align: justify;
   opacity: 0;
   z-index: 10;
+  overflow: scroll;
 
   font-size: 2vh;
   line-height: 1.6;
@@ -126,6 +127,11 @@ body {
 
   .sources {
     margin-top: 20px;
+    display: flex-inline;
+
+    .source-list {
+      margin: 0 0 10px;
+    }
   }
 
   p {
@@ -162,6 +168,20 @@ body {
   font-size: 50px;
   font-family: $font-family-1;
   opacity: 0;
+}
+
+.credit {
+
+  > * {
+    text-decoration: none;
+    color: white;
+  }
+
+  font-size: 16px;
+
+  img {
+    width: 16px;
+  }
 }
 
 .start {
