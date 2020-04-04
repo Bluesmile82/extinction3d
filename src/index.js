@@ -2,6 +2,7 @@ import * as THREE from 'three';
 // import Hammer from 'hammerjs';
 import extinctionJson from './extinction.json';
 import '../styles/main.scss';
+import githubImage from '../images/icon-github.png';
 
 let camera, scene, renderer, yearTimeout, displayedYear, raycaster, tooltip;
 const data = {};
@@ -17,6 +18,8 @@ let outroVisible = false;
 
 const intro = document.getElementById('intro');
 const outro = document.getElementById('outro');
+
+document.getElementById('credit-image').src = githubImage;
 
 init();
 animate();

@@ -36,18 +36,28 @@ module.exports = {
           'sass-loader',
         ],
       },
+      {
+        test: /\.(gif|png|jpe?g|svg)$/i,
+        use: [
+          'file-loader',
+          'image-webpack-loader'
+        ],
+      },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-
       title: 'Extinction',
-      template: 'index.html'
-    }
-    ),
+      template: 'index.html',
+    }),
   ],
   resolve: {
-    extensions: ['.js', '.jsx', '.scss'],
+    extensions: [
+      '.js',
+      '.jsx',
+      '.scss',
+      '.png',
+    ],
   },
   mode: 'production',
 };
