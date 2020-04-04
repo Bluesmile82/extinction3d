@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import Hammer from 'hammerjs';
+// import Hammer from 'hammerjs';
 import extinctionJson from './extinction.json';
 import '../styles/main.scss';
 
@@ -50,11 +50,11 @@ function init() {
   const threeContainer = document.getElementById('three');
   document.getElementById('three').appendChild(renderer.domElement);
 
-  const hammertime = new Hammer(document.body);
-  hammertime.get('pinch').set({ enable: true });
-  hammertime.on('pinch', function (ev) {
-    console.log('event', ev);
-  });
+  // const hammertime = new Hammer(document.body);
+  // hammertime.get('pinch').set({ enable: true });
+  // hammertime.on('pinch', function (ev) {
+  //   console.log('event', ev);
+  // });
 
   document.getElementById('three');
 
@@ -154,7 +154,6 @@ function init() {
       }
     } else {
       const displacement = parseInt(Math.abs(yDiff), 10);
-      console.log('d', displacement)
 
       for (let i = parseInt(displacement, 10); i-- ; i > 0) {
         setTimeout(() => {
