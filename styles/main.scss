@@ -1,5 +1,8 @@
+$font-family-1: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
 body {
   background-color: #222;
+  font-family: $font-family-1;
 }
 
 #container {
@@ -14,6 +17,88 @@ body {
   align-items: center;
   justify-content: center;
   color: white;
+}
+
+#intro {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 30px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+
+  h1 {
+    margin: -80px 0 80px;
+    color: lightcoral;
+    text-transform: uppercase;
+  }
+
+  p {
+    padding: 0 40px;
+    margin: 15px;
+
+    &.text-blue {
+      color: bisque;
+    }
+  }
+}
+
+#outro {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  text-align: justify;
+  opacity: 0;
+  z-index: 10;
+
+
+  .legend {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+
+    .legend-square {
+      margin-right: 5px;
+      width: 10px;
+      height: 10px;
+      background-color: white;
+
+      &.animalia {
+        background-color: #ffaaaa,
+      }
+
+      &.plantae {
+        background-color: #aaffcc,
+      }
+    }
+  }
+
+
+  .sources {
+    margin-top: 20px;
+  }
+
+  p {
+    margin: 10px 0;
+    padding: 0 40px;
+  }
 }
 
 #tooltip-container {
@@ -42,7 +127,7 @@ body {
 
 .year {
   font-size: 50px;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-family: $font-family-1;
   opacity: 0;
 }
 
@@ -52,8 +137,9 @@ body {
 }
 
 .out {
-  animation: fadeout 1s;
+  animation: fadeout 0.75s;
   animation-fill-mode: forwards;
+  z-index: 0;
 }
 
 @keyframes fadein {

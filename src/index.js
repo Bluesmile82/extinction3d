@@ -9,17 +9,19 @@ let mouse = new THREE.Vector2(),
   INTERSECTED;
 let mousePosition = { x: 0, y: 0 };
 const START_YEAR = 1450;
-const END_YEAR = 2020;
+const END_YEAR = 2015;
 let xDown = null;
 let yDown = null;
+let introVisible = true;
+let outroVisible = false;
 
 init();
 animate();
 
 
 function handleTouchStart(evt) {
-    xDown = evt.touches[0].clientX;
-    yDown = evt.touches[0].clientY;
+  xDown = evt.touches[0].clientX;
+  yDown = evt.touches[0].clientY;
 };
 
 function onDocumentMouseMove(event) {
@@ -78,6 +80,35 @@ function init() {
       10
     );
     if (nextyear > START_YEAR - 10 && nextyear < END_YEAR) {
+      console.log(nextyear, END_YEAR);
+
+      if (introVisible) {
+        const intro = document.getElementById('intro');
+        intro.classList.add('out');
+        introVisible = false;
+      }
+      if (!introVisible && nextyear <= START_YEAR) {
+        const intro = document.getElementById('intro');
+        intro.classList.remove('out');
+        intro.classList.add('in');
+        introVisible = true;
+      }
+
+      if (!outroVisible && nextyear >= END_YEAR - 10) {
+        const outro = document.getElementById('outro');
+        console.log('out now')
+        clearTimeout(yearTimeout);
+        yearUI.classList.add('out');
+        outro.classList.remove('out');
+        outro.classList.add('in');
+        outroVisible = true;
+      }
+      if (outroVisible && nextyear < END_YEAR - 10) {
+        const outro = document.getElementById('outro');
+        outro.classList.add('out');
+        outroVisible = false;
+      }
+
       const roundedYear = Math.round(year / 10) * 10;
 
       if (
@@ -121,7 +152,14 @@ function init() {
         /* right swipe */
       }
     } else {
-      onMouseWheel(evt, yDiff);
+      const displacement = parseInt(Math.abs(yDiff), 10);
+      console.log('d', displacement)
+
+      for (let i = parseInt(displacement, 10); i-- ; i > 0) {
+        setTimeout(() => {
+          onMouseWheel(evt, yDiff / 5);
+        }, i * 50);
+      }
       if (yDiff > 0) {
         /* up swipe */
       } else {
