@@ -1,12 +1,20 @@
 $font-family-1: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+html {
+  height: 100%;
+}
 
 body {
   background-color: #222;
   font-family: $font-family-1;
+  height: 100%;
 }
 
 #container {
   position: relative;
+}
+
+#three {
+  height: 100%;
 }
 
 #top-ui {
@@ -33,7 +41,13 @@ body {
   text-align: center;
 
   h1 {
-    margin: -80px 0 80px;
+    font-size: 10vw;
+
+    @media only screen and (min-width: 600px) {
+      font-size: 40px;
+      margin: -80px 0 80px;
+    }
+
     color: lightcoral;
     text-transform: uppercase;
   }
@@ -63,10 +77,21 @@ body {
   opacity: 0;
   z-index: 10;
 
+  font-size: 2vh;
+  line-height: 1.6;
+
+  @media only screen and (min-width: 600px) {
+    font-size: 16px;
+  }
+
 
   .legend {
-    font-size: 16px;
-    margin-bottom: 20px;
+    margin: 20px 0 0;
+
+    @media only screen and (min-width: 600px) {
+      margin: 0 0 20px;
+    }
+
   }
 
 
