@@ -1,9 +1,13 @@
 import * as THREE from 'three';
-// import Hammer from 'hammerjs';
 import extinctionJson from './extinction.json';
 import '../styles/main.scss';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { BokehPass } from 'three/examples/jsm/postprocessing/BokehPass.js';
 import githubImage from '../images/icon-github.png';
+// import Hammer from 'hammerjs';
 
+const postprocessing = {};
 let camera, scene, renderer, yearTimeout, displayedYear, raycaster, tooltip;
 const data = {};
 let mouse = new THREE.Vector2(),
@@ -59,7 +63,7 @@ function init() {
   outro.classList.add("start")
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x08151E);
-  scene.fog = new THREE.FogExp2(0x08151E, 0.0018);
+  // scene.fog = new THREE.FogExp2(0x08151E, 0.00158);
 
   raycaster = new THREE.Raycaster();
 
@@ -67,8 +71,8 @@ function init() {
 
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  const threeContainer = document.getElementById('three');
   document.getElementById('three').appendChild(renderer.domElement);
+
 
   // const hammertime = new Hammer(document.body);
   // hammertime.get('pinch').set({ enable: true });
@@ -93,6 +97,10 @@ function init() {
   );
 
   camera.position.set(0, 100, 0);
+
+  const cameraLight = new THREE.PointLight(0xffffff, 2, 800);
+  cameraLight.position.set(0, 100, 0);
+  scene.add(cameraLight);
 
   // controls
 
@@ -144,7 +152,11 @@ function init() {
 
         displayedYear = roundedYear;
       }
-
+      cameraLight.position.set(
+        camera.position.x,
+        camera.position.y,
+        camera.position.z + displacement
+      );
       camera.position.set(
         camera.position.x,
         camera.position.y,
@@ -207,7 +219,7 @@ function init() {
   // world
 
   const geometry = new THREE.BoxBufferGeometry(1, 1, 1);
-  const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+  const sphereGeometry = new THREE.SphereGeometry(1, 10, 10);
 
   geometry.translate(0, 0, 0);
   const createMaterial = (color) =>
@@ -239,8 +251,8 @@ function init() {
       mesh.scale.x = scale;
       mesh.scale.y = scale;
       mesh.scale.z = scale;
-      mesh.updateMatrix();
       mesh.matrixAutoUpdate = false;
+      mesh.updateMatrix();
 
       scene.add(mesh);
 
@@ -249,18 +261,41 @@ function init() {
 
   // lights
 
-  var light = new THREE.DirectionalLight(0xffffff);
-  light.position.set(1, 1, 1);
-  scene.add(light);
+  // var light = new THREE.DirectionalLight(0xffffff);
+  // light.position.set(1, 1, 1);
+  // scene.add(light);
 
-  var light = new THREE.DirectionalLight(0x002288);
-  light.position.set(-1, -1, -1);
-  scene.add(light);
+  // var light = new THREE.DirectionalLight(0x002288);
+  // light.position.set(-1, -1, -1);
+  // scene.add(light);
+
+  // const lightYears = [1400, 1500, 1600, 1700, 1800, 1900, 1950, 2000];
+  // lightYears.forEach(i => {
+  //   const z = (i - START_YEAR) * -10;
+  //   const light = new THREE.PointLight(0xffffff, 1, 1000);
+  //   console.log(z)
+  //   light.position.set(1, 100, z);
+  //   scene.add(light);
+  // });
+
 
   var light = new THREE.AmbientLight(0x08151e);
   scene.add(light);
 
   window.addEventListener('resize', onWindowResize, false);
+
+
+  initPostprocessing();
+
+  const matChanger = function () {
+    postprocessing.bokeh.uniforms['focus'].value = 20.0;
+    postprocessing.bokeh.uniforms['aperture'].value = 2.7 * 0.00001;
+    postprocessing.bokeh.uniforms['maxblur'].value = 0.0125;
+  };
+
+  matChanger();
+  renderer.autoClear = false;
+
 }
 
 function onWindowResize() {
@@ -268,6 +303,27 @@ function onWindowResize() {
   camera.updateProjectionMatrix();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
+  postprocessing.composer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function initPostprocessing() {
+  var renderPass = new RenderPass(scene, camera);
+
+  var bokehPass = new BokehPass(scene, camera, {
+    focus: 1.0,
+    aperture: 0.025,
+    maxblur: 1.0,
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  var composer = new EffectComposer(renderer);
+
+  composer.addPass(renderPass);
+  composer.addPass(bokehPass);
+
+  postprocessing.composer = composer;
+  postprocessing.bokeh = bokehPass;
 }
 
 function animate() {
@@ -328,5 +384,6 @@ function render() {
     INTERSECTED = null;
   }
 
-  renderer.render(scene, camera);
+	postprocessing.composer.render(0.1);
+  // renderer.render(scene, camera);
 }
