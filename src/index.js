@@ -5,6 +5,7 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { BokehPass } from 'three/examples/jsm/postprocessing/BokehPass.js';
 import githubImage from '../images/icon-github.png';
+import { isMobileOrTablet } from './utils';
 // import Hammer from 'hammerjs';
 
 const postprocessing = {};
@@ -23,22 +24,7 @@ let outroVisible = false;
 const intro = document.getElementById('intro');
 const outro = document.getElementById('outro');
 
-const isMobileOrTablet = function () {
-  var check = false;
-  (function (a) {
-    if (
-      /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(
-        a
-      ) ||
-      /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(
-        a.substr(0, 4)
-      )
-    )
-      check = true;
-  })(navigator.userAgent || navigator.vendor || window.opera);
-  return check;
-};
-
+const mobileOrTablet = isMobileOrTablet();
 
 document.getElementById('credit-image').src = githubImage;
 
@@ -59,27 +45,23 @@ function onDocumentMouseMove(event) {
 }
 
 function init() {
-  intro.classList.add("start")
-  outro.classList.add("start")
+  intro.classList.add("start");
+  outro.classList.add("start");
+
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x08151E);
-  // scene.fog = new THREE.FogExp2(0x08151E, 0.00158);
-
+  scene.fog = new THREE.FogExp2(0x08151E, 0.0009);
   raycaster = new THREE.Raycaster();
-
   renderer = new THREE.WebGLRenderer({ antialias: true });
-
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  document.getElementById('three').appendChild(renderer.domElement);
 
+  document.getElementById('three').appendChild(renderer.domElement);
 
   // const hammertime = new Hammer(document.body);
   // hammertime.get('pinch').set({ enable: true });
   // hammertime.on('pinch', function (ev) {
   // });
-
-  document.getElementById('three');
 
   const yearUI = document.createElement('div');
   yearUI.classList.add('year');
@@ -88,17 +70,16 @@ function init() {
   tooltip = document.createElement('div');
   tooltip.classList.add('tooltip');
   document.getElementById('tooltip-container').appendChild(tooltip);
-  document.addEventListener('mousemove', onDocumentMouseMove, false);
+
   camera = new THREE.PerspectiveCamera(
     55,
     window.innerWidth / window.innerHeight,
     1,
     10000
   );
-
   camera.position.set(0, 100, 0);
 
-  const cameraLight = new THREE.PointLight(0xffffff, 2, 800);
+  const cameraLight = new THREE.PointLight(0xffffff, 4, 1000);
   cameraLight.position.set(0, 100, 0);
   scene.add(cameraLight);
 
@@ -201,7 +182,7 @@ function init() {
   }
 
   const handleClick = () => {
-    if (INTERSECTED && !isMobileOrTablet()) {
+    if (INTERSECTED && !mobileOrTablet) {
       window.open(
         `https://en.wikipedia.org/wiki/${data[INTERSECTED.uuid].name}`,
         '_blank'
@@ -209,6 +190,7 @@ function init() {
     }
   }
 
+  document.addEventListener('mousemove', onDocumentMouseMove, false);
   document.addEventListener('wheel', onMouseWheel, false);
   document.addEventListener('DOMMouseScroll', onMouseWheel, false);
   document.addEventListener('onmousewheel', onMouseWheel, false);
@@ -216,15 +198,17 @@ function init() {
   document.addEventListener('touchmove', handleTouchMove, false);
   document.addEventListener('click', handleClick, false);
 
-  // world
+  // WORLD
 
   const geometry = new THREE.BoxBufferGeometry(1, 1, 1);
   const sphereGeometry = new THREE.SphereGeometry(1, 10, 10);
 
   geometry.translate(0, 0, 0);
   const createMaterial = (color) =>
-    new THREE.MeshPhongMaterial({
+    new THREE.MeshStandardMaterial({
       color,
+      metalness: 0.5,
+      roughness: 0.2
     });
 
   extinctionJson
@@ -235,7 +219,10 @@ function init() {
         PLANTAE: 0x73956f,
       };
 
-      const material = () => createMaterial(kingdomColors[d.kingdomName] || 0xffffff);
+      const material = () => {
+        const createdMaterial = createMaterial(kingdomColors[d.kingdomName] || 0xffffff);
+        return createdMaterial;
+      }
 
       var mesh = new THREE.Mesh(
         d.redlistCategory === 'Extinct' ? geometry : sphereGeometry,
@@ -259,24 +246,19 @@ function init() {
       data[mesh.uuid] = { ...d };
     });
 
-  // lights
+  // LIGHTS
 
-  // var light = new THREE.DirectionalLight(0xffffff);
-  // light.position.set(1, 1, 1);
-  // scene.add(light);
+  var light = new THREE.DirectionalLight(0xffffff, 1);
+  light.position.set(-100, 1, 1);
+  scene.add(light);
+
+  var backLight = new THREE.DirectionalLight(0xfffff, 5);
+  backLight.position.set(10, 1, -100);
+  scene.add(backLight);
 
   // var light = new THREE.DirectionalLight(0x002288);
   // light.position.set(-1, -1, -1);
   // scene.add(light);
-
-  // const lightYears = [1400, 1500, 1600, 1700, 1800, 1900, 1950, 2000];
-  // lightYears.forEach(i => {
-  //   const z = (i - START_YEAR) * -10;
-  //   const light = new THREE.PointLight(0xffffff, 1, 1000);
-  //   console.log(z)
-  //   light.position.set(1, 100, z);
-  //   scene.add(light);
-  // });
 
 
   var light = new THREE.AmbientLight(0x08151e);
@@ -286,16 +268,7 @@ function init() {
 
 
   initPostprocessing();
-
-  const matChanger = function () {
-    postprocessing.bokeh.uniforms['focus'].value = 20.0;
-    postprocessing.bokeh.uniforms['aperture'].value = 2.7 * 0.00001;
-    postprocessing.bokeh.uniforms['maxblur'].value = 0.0125;
-  };
-
-  matChanger();
   renderer.autoClear = false;
-
 }
 
 function onWindowResize() {
@@ -310,9 +283,9 @@ function initPostprocessing() {
   var renderPass = new RenderPass(scene, camera);
 
   var bokehPass = new BokehPass(scene, camera, {
-    focus: 1.0,
-    aperture: 0.025,
-    maxblur: 1.0,
+    focus: 20.0,
+    aperture: 1.1 * 0.00001,
+    maxblur: 0.0125,
     width: window.innerWidth,
     height: window.innerHeight,
   });
@@ -328,9 +301,7 @@ function initPostprocessing() {
 
 function animate() {
   requestAnimationFrame(animate);
-
   // controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-
   render();
 }
 
@@ -348,7 +319,7 @@ function showTooltip(data) {
       <div class="kingdom-name">
         ${data.kingdomName} - ${data.speciesClassName}
       </div>
-      ${isMobileOrTablet() ? '' : `<div class="tooltip-message">Click to open wikipedia page</div>`}
+      ${mobileOrTablet ? '' : `<div class="tooltip-message">Click to open wikipedia page</div>`}
     </div>
   `;
 }
